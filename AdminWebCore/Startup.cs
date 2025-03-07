@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AdminWebCore.Configurations.IdentityServer;
-using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -52,11 +50,7 @@ namespace AdminWebCore
                         options.RequireHttpsMetadata = false;
                     });
 
-            services.AddIdentityServer()
-                    .AddDeveloperSigningCredential() //not something we want to use in a production environment
-                    .AddInMemoryIdentityResources(InMemoryConfig.GetIdentityResources())
-                    .AddTestUsers(InMemoryConfig.GetUsers())
-                    .AddInMemoryClients(InMemoryConfig.GetClients());
+            
 
             services.AddSwaggerDocument(config => {
                 config.DocumentProcessors.Add(new SecurityDefinitionAppender("JWT Token",
@@ -84,8 +78,6 @@ namespace AdminWebCore
                 app.UseHsts();
             }
 
-            app.UseIdentityServer();
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -100,7 +92,7 @@ namespace AdminWebCore
             });
 
             app.UseOpenApi();
-            app.UseSwaggerUi3();
+            app.UseSwaggerUi();
         }
     }
 }
